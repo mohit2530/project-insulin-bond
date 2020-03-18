@@ -43,7 +43,7 @@ public class SwaggerConfig {
      */
     private ApiInfo apiDetails() {
         return new ApiInfo(
-                "Address Book API",
+                "Project Insulin Bond API",
                 "Sample API For ProjectIB.com",
                 "1.0",
                 "Free To use",

@@ -1,6 +1,8 @@
 package com.insulinbond.users;
 
 import com.insulinbond.authentication.*;
+import com.insulinbond.exception.UnauthorizedException;
+import com.insulinbond.exception.UserCreationException;
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -36,7 +38,7 @@ public class UsersControllerImpl implements UsersController {
      * @throws UserCreationException
      */
     @Override
-    public String register(@Valid @RequestBody  Users user, BindingResult result) throws UserCreationException {
+    public String registerCurrentUser(@Valid @RequestBody  Users user, BindingResult result) throws UserCreationException {
         if (result.hasErrors()) {
             String errorMessages = "";
             for (ObjectError error : result.getAllErrors()) {
@@ -55,7 +57,7 @@ public class UsersControllerImpl implements UsersController {
      * @return
      */
     @Override
-    public String logOut() {
+    public String logOutCurrentUser() {
         authentication.currentUserLogOff();
         return "logout Success";
     }
@@ -67,7 +69,7 @@ public class UsersControllerImpl implements UsersController {
      * @throws UnauthorizedException
      */
     @Override
-    public String login(@RequestBody Users user) throws UnauthorizedException {
+    public String loginCurrentUser(@RequestBody Users user) throws UnauthorizedException {
         if (authentication.currentUserSignIn(user.getUsername(), user.getPassword()) ) {
             Users currentUser = authentication.getCurrentUser();
             tokenHandler.createToken(user.getUsername(), currentUser.getRole());
