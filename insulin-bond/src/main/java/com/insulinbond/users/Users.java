@@ -4,7 +4,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 /**
  * The user class with data base integration alongside mongo db database.
@@ -121,9 +120,6 @@ public class Users {
 
     public void setSalt(String salt) {
         this.salt = salt;
-    }
-
-    public void setAccountCreatedDateTime(LocalDateTime accountCreatedDateTime) {
     }
 
 }
