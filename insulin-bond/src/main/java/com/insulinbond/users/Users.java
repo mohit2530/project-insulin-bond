@@ -63,14 +63,6 @@ public class Users {
 
 
     /**
-     * The local date time the account was created
-     */
-    @NotNull
-    @Valid
-    private LocalDateTime accountCreatedDateTime;
-
-
-    /**
      * Get and Set below here for the above values
      *
      */
@@ -131,12 +123,7 @@ public class Users {
         this.salt = salt;
     }
 
-    public LocalDateTime getAccountCreatedDateTime() {
-        return accountCreatedDateTime;
-    }
-
     public void setAccountCreatedDateTime(LocalDateTime accountCreatedDateTime) {
-        this.accountCreatedDateTime = accountCreatedDateTime;
     }
 
 }
