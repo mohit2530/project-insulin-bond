@@ -1,4 +1,4 @@
-package com.insulinbond.authentication;
+package com.insulinbond.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

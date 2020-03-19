@@ -1,7 +1,7 @@
 package com.insulinbond.users;
 
-import com.insulinbond.authentication.UnauthorizedException;
-import com.insulinbond.authentication.UserCreationException;
+import com.insulinbond.exception.UnauthorizedException;
+import com.insulinbond.exception.UserCreationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
@@ -11,7 +11,7 @@ import javax.validation.Valid;
 
 @CrossOrigin()
 @RestController
-@RequestMapping("genill/api")
+@RequestMapping("project/ib/")
 public interface UsersController {
 
     /**
@@ -26,15 +26,16 @@ public interface UsersController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public String register(@Valid @RequestBody Users user, BindingResult result) throws UserCreationException;
+    public String registerCurrentUser(@Valid @RequestBody Users user, BindingResult result) throws UserCreationException;
 
 
     /**
+     * Todo: need to properly implement this into using a POST request
      * User logout
      * @return
      */
-    @RequestMapping(value ="/logout", method = RequestMethod.GET)
-    public String logOut();
+    @RequestMapping(value ="/logout", method = RequestMethod.POST)
+    public String logOutCurrentUser();
 
     /**
      * Take the user information and login and establish the session
@@ -47,13 +48,13 @@ public interface UsersController {
             produces = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public String login(@RequestBody Users user) throws UnauthorizedException;
+    public String loginCurrentUser(@RequestBody Users user) throws UnauthorizedException;
 
     /**
      * Todo: will remove Get user By Username
      * @param username
      * @return
      */
-    @RequestMapping(value = "/username/{username}", method = RequestMethod.GET)
+    @RequestMapping(value = "/username/{username}", method = RequestMethod.POST)
     public Users getUserByUserName(@PathVariable String username);
 }
