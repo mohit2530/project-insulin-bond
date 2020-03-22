@@ -1,9 +1,11 @@
 package com.insulinbond.users;
 
 import com.insulinbond.authentication.*;
+import com.insulinbond.customErrorHandler.*;
 import com.insulinbond.exception.UnauthorizedException;
 import com.insulinbond.exception.UserCreationException;
 import org.bouncycastle.util.encoders.Base64;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -20,14 +22,17 @@ public class UsersControllerImpl implements UsersController {
     private JwtTokenHandler tokenHandler;
     private PasswordHasher passwordHasher;
     private UsersRepository userRepo;
+    private ApiExceptionService apiExceptionService;
 
     @Inject
     public UsersControllerImpl(RequestAuthProvider authentication, JwtTokenHandler tokenHandler,
-                               PasswordHasher passwordHasher, UsersRepository userRepo) {
+                               PasswordHasher passwordHasher, UsersRepository userRepo,
+                               ApiExceptionService apiExceptionService) {
         this.authentication = authentication;
         this.tokenHandler = tokenHandler;
         this.passwordHasher = passwordHasher;
         this.userRepo = userRepo;
+        this.apiExceptionService = apiExceptionService;
     }
 
     /**
@@ -38,14 +43,15 @@ public class UsersControllerImpl implements UsersController {
      * @throws UserCreationException
      */
     @Override
-    public String registerCurrentUser(@Valid @RequestBody  Users user, BindingResult result) throws UserCreationException {
+    public String registerCurrentUser(@Valid @RequestBody Users user, BindingResult result) throws ApiRequestException {
         if (result.hasErrors()) {
             String errorMessages = "";
             for (ObjectError error : result.getAllErrors()) {
                 errorMessages += error.getDefaultMessage() + "\n";
             }
-            throw new UserCreationException(errorMessages);
+            throw apiExceptionService.throwApiException(errorMessages, HttpStatus.BAD_REQUEST);
         }
+
         user.setRole("user");
         saveUser(user.getFirstName(), user.getLastName(), user.getUsername(), user.getPassword(), user.getRole(),
                 user.getEmail());
@@ -69,7 +75,7 @@ public class UsersControllerImpl implements UsersController {
      * @throws UnauthorizedException
      */
     @Override
-    public String loginCurrentUser(@RequestBody Users user) throws UnauthorizedException {
+    public String loginCurrentUser(@RequestBody Users user) throws ApiRequestException {
         if (authentication.currentUserSignIn(user.getUsername(), user.getPassword()) ) {
             Users currentUser = authentication.getCurrentUser();
             tokenHandler.createToken(user.getUsername(), currentUser.getRole());
@@ -77,7 +83,7 @@ public class UsersControllerImpl implements UsersController {
             return user.getUsername();
 
         } else {
-            throw new UnauthorizedException();
+            throw apiExceptionService.throwApiException("Sorry Login could bot completed", HttpStatus.FORBIDDEN);
         }
     }
 

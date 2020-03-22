@@ -1,0 +1,30 @@
+.radioButton-question {
+  &__formGroup {
+    margin-bottom: 0.5em;
+  }
+
+  &__error-formGroup {
+    border: 3px solid red;
+  }
+
+  &__input {
+    transform : scale(1.2);
+    margin-bottom: 0.8em;
+    margin-right: 1em;
+  }
+
+  &__label {
+    font-size: 16px;
+    margin-bottom: 1em;
+  }
+
+  &__error-label {
+    font-size: 16px;
+    margin-bottom: 1em;
+    color: red;
+  }
+
+  &__container {
+    margin-top: 0.8em;
+  }
+}

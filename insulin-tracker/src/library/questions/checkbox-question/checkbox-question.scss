@@ -1,0 +1,20 @@
+.checkbox-question {
+  &__formGroup {
+    margin-bottom: 0.5em;
+  }
+
+  &__input {
+    transform : scale(2);
+    margin-right: 1em;
+    margin-bottom: 1em;
+  }
+
+  &__error-label {
+    color: red;
+    font-size: 16px;
+  }
+
+  &__label {
+    font-size: 16px;
+  }
+}
