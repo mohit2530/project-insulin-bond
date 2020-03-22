@@ -1,9 +1,11 @@
 package com.insulinbond.users;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 /**
  * The user class with data base integration alongside mongo db database.
@@ -42,8 +44,6 @@ public class Users {
     /**
      * The user role [ could be admin, user ]
      */
-    @NotNull
-    @Valid
     private String role;
 
     /**
@@ -56,10 +56,9 @@ public class Users {
     /**
      * The user password salt
      */
-    @NotNull
-    @Valid
     private String salt;
 
+    private LocalDateTime accountCreatedDateTime;
 
     /**
      * Get and Set below here for the above values
@@ -122,5 +121,12 @@ public class Users {
         this.salt = salt;
     }
 
+    public LocalDateTime getAccountCreatedDateTime() {
+        return accountCreatedDateTime;
+    }
+
+    public void setAccountCreatedDateTime(LocalDateTime accountCreatedDateTime) {
+        this.accountCreatedDateTime = accountCreatedDateTime;
+    }
 }
 
