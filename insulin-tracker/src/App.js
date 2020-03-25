@@ -1,17 +1,18 @@
-import React from 'react';
-import './index.css';
+import React, { Component } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import NavBar from './components/layouts/navbar';
 import Log from './lib/log';
 
-class App extends React.Component {
 
+export default class extends Component {
     render() {
-        Log.info('React Application Initialized', 'Main Component');
+        Log.info("React Application Initialized", "Main Component");
         return (
-            <div>
-                <h1 className="center"> Project Insulin Bond</h1>
-            </div>
+            <BrowserRouter>
+                <div className="App">
+                    <NavBar/>
+                </div>
+            </BrowserRouter>
         )
     }
 }
-
-export default App;
