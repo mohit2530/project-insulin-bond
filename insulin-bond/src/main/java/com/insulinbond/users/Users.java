@@ -1,31 +1,70 @@
 package com.insulinbond.users;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
+/**
+ * The user class with data base integration alongside mongo db database.
+ */
 @Document(collection="users")
 public class Users {
 
+    /**
+     * The user first name
+     */
+    @NotNull
+    @Valid
     private String firstName;
 
+    /**
+     * The user last name
+     */
+    @NotNull
+    @Valid
     private String lastName;
 
+    /**
+     * The user username
+     */
+    @NotNull
+    @Valid
     private String username;
 
+    /**
+     * The user email
+     */
+    @NotNull
+    @Valid
     private String email;
 
+    /**
+     * The user role [ could be admin, user ]
+     */
+    @NotNull
+    @Valid
     private String role;
 
+    /**
+     * The user password.
+     */
+    @NotNull
+    @Valid
     private String password;
 
+    /**
+     * The user password salt
+     */
+    @NotNull
+    @Valid
     private String salt;
 
-    private String confirmPassword;
 
-    private LocalDateTime accountCreatedDateTime;
-
+    /**
+     * Get and Set below here for the above values
+     *
+     */
 
     public String getFirstName() {
         return firstName;
@@ -81,22 +120,6 @@ public class Users {
 
     public void setSalt(String salt) {
         this.salt = salt;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
-
-    public LocalDateTime getAccountCreatedDateTime() {
-        return accountCreatedDateTime;
-    }
-
-    public void setAccountCreatedDateTime(LocalDateTime accountCreatedDateTime) {
-        this.accountCreatedDateTime = accountCreatedDateTime;
     }
 
 }
