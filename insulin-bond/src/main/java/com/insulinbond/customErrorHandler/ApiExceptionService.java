@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 @Service
 public class ApiExceptionService {
 
+    /**
+     * Injecting Api Exception Repository to save in Database
+     */
     @Inject
     private ApiExceptionRepository apiExceptionRepository;
 

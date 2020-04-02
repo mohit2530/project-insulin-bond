@@ -21,8 +21,6 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {ApiRequestException.class})
     public ResponseEntity<ApiException> handleApiRequestException(ApiRequestException e) {
         HttpStatus httpStatus = null;
-
-        // coming httpstatus check and assign to httpstatus
         if (e.getHttpStatus() == HttpStatus.FORBIDDEN) {
             httpStatus = HttpStatus.FORBIDDEN;
         }
