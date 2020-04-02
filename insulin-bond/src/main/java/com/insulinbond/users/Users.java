@@ -1,6 +1,5 @@
 package com.insulinbond.users;
 
-import org.apache.tomcat.jni.Local;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.Valid;
@@ -54,11 +53,14 @@ public class Users {
     private String password;
 
     /**
+     * Local Date time for when the user is registered
+     */
+    private LocalDateTime accountCreatedDateTime;
+
+    /**
      * The user password salt
      */
     private String salt;
-
-    private LocalDateTime accountCreatedDateTime;
 
     /**
      * Get and Set below here for the above values

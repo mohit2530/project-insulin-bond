@@ -60,7 +60,7 @@ public class UsersControllerImpl implements UsersController {
 
     /**
      * Logout and end user session
-     * @return
+     * @return String
      */
     @Override
     public String logOutCurrentUser() {
@@ -87,15 +87,6 @@ public class UsersControllerImpl implements UsersController {
         }
     }
 
-    /**
-     * Todo; Will remove => Get user by username
-     * @param username
-     * @return
-     */
-    @Override
-    public Users getUserByUserName(String username) {
-        return userRepo.findByUsername(username);
-    }
 
     /**
      * Save the user in Database
