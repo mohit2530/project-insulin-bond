@@ -53,9 +53,9 @@ public class UsersControllerImpl implements UsersController {
         }
 
         user.setRole("user");
-        saveUser(user.getFirstName(), user.getLastName(), user.getUsername(), user.getPassword(), user.getRole(),
+        saveUser(user.getFirstName(), user.getLastName(), user.getPassword(), user.getRole(),
                 user.getEmail());
-        return user.getUsername();
+        return user.getEmail();
     }
 
     /**
@@ -71,43 +71,42 @@ public class UsersControllerImpl implements UsersController {
     /**
      * Take the user information, login and establish the session
      * @param user
-     * @return username
+     * @return email
      * @throws UnauthorizedException
      */
     @Override
     public String loginCurrentUser(@RequestBody Users user) throws ApiRequestException {
-        if (authentication.currentUserSignIn(user.getUsername(), user.getPassword()) ) {
+        if (authentication.currentUserSignIn(user.getEmail(), user.getPassword()) ) {
             Users currentUser = authentication.getCurrentUser();
-            tokenHandler.createToken(user.getUsername(), currentUser.getRole());
+            tokenHandler.createToken(user.getEmail(), currentUser.getRole());
 
-            return user.getUsername();
+            return user.getEmail();
 
         } else {
-            throw apiExceptionService.throwApiException("Sorry Login could bot completed", HttpStatus.FORBIDDEN);
+            throw apiExceptionService.throwApiException("Sorry Login could Not completed", HttpStatus.FORBIDDEN);
         }
     }
 
     /**
-     * Todo; Will remove => Get user by username
-     * @param username
+     * Todo; Will remove => Get user by email
+     * @param email
      * @return
      */
     @Override
-    public Users getUserByUserName(String username) {
-        return userRepo.findByUsername(username);
+    public Users getUserByEmail(String email) {
+        return userRepo.findByEmail(email);
     }
 
     /**
      * Save the user in Database
      * @param firstName
      * @param lastName
-     * @param userName
      * @param password
      * @param role
      * @param email
      * @return save user
      */
-    private Users saveUser(String firstName, String lastName, String userName, String password, String role, String email){
+    private Users saveUser(String firstName, String lastName, String password, String role, String email){
         byte[] salt = passwordHasher.generateRandomSalt();
         String hashedPassword = passwordHasher.computeHash(password, salt);
         String saltString = new String(Base64.encode(salt));
@@ -116,7 +115,6 @@ public class UsersControllerImpl implements UsersController {
         Users user = new Users();
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        user.setUsername(userName);
         user.setPassword(hashedPassword);
         user.setSalt(saltString);
         user.setAccountCreatedDateTime(accountCreatedDateTime);

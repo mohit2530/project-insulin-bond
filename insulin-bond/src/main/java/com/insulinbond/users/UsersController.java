@@ -52,10 +52,9 @@ public interface UsersController {
     public String loginCurrentUser(@RequestBody Users user) throws ApiRequestException;
 
     /**
-     * Todo: will remove Get user By Username
-     * @param username
+     * @param email
      * @return
      */
-    @RequestMapping(value = "/username/{username}", method = RequestMethod.POST)
-    public Users getUserByUserName(@PathVariable String username);
+    @RequestMapping(value = "/email/{email}", method = RequestMethod.GET)
+    public Users getUserByEmail(@PathVariable String email);
 }
