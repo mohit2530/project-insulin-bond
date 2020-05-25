@@ -41,15 +41,15 @@ public class RequestAuthProvider implements AuthProvider {
     }
 
     /**
-     * Signs in a user using the given username and password
+     * Signs in a user using the given email and password
      *
-     * @param username the given username
+     * @param email
      * @param password the given password
      * @return true if user was successfully signed in
      */
     @Override
-    public boolean currentUserSignIn(String username, String password) {
-        Users authenticatedUser = usersHelperService.getValidUserWithPassword(username, password);
+    public boolean currentUserSignIn(String email, String password) {
+        Users authenticatedUser = usersHelperService.getValidUserWithPassword(email, password);
         if (authenticatedUser != null) {
             request.setAttribute(USER_KEY, authenticatedUser);
             return true;
@@ -73,14 +73,14 @@ public class RequestAuthProvider implements AuthProvider {
 	 * @return true, if successful
 	 */
     @Override
-    public boolean changeCurrentUserPassword(String existingPassword, String newPassword, String username) {
+    public boolean changeCurrentUserPassword(String existingPassword, String newPassword, String email) {
         Users userFromSession = (Users) request.getAttribute(USER_KEY);
         if (userFromSession == null) {
             return false;
         }
-        Users userFromDb = usersHelperService.getValidUserWithPassword(userFromSession.getUsername(), existingPassword);
-        if (userFromDb != null && userFromDb.getUsername().equals(userFromDb.getUsername())) {
-            usersHelperService.changePassword(userFromSession, newPassword, username);
+        Users userFromDb = usersHelperService.getValidUserWithPassword(userFromSession.getEmail(), existingPassword);
+        if (userFromDb != null && userFromDb.getEmail().equals(userFromDb.getEmail())) {
+            usersHelperService.changePassword(userFromSession, newPassword, email);
             return true;
         }
         return false;

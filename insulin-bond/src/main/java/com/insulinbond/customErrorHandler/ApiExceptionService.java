@@ -22,7 +22,7 @@ public class ApiExceptionService {
      * @return
      */
     public ApiRequestException throwApiException(String message, HttpStatus httpStatus) {
-        ApiRequestException e =  new ApiRequestException(message, httpStatus);
+        ApiRequestException e =  new ApiRequestException(message.toUpperCase(), httpStatus);
         ApiException apiException = new ApiException(
                 e.getMessage(),
                 e,

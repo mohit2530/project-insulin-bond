@@ -29,14 +29,6 @@ public class Users {
     private String lastName;
 
     /**
-     * The user username
-     */
-    @NotNull
-    @Valid
-    @Indexed(unique = true, sparse = true)
-    private String username;
-
-    /**
      * The user email
      */
     @NotNull
@@ -82,14 +74,6 @@ public class Users {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getEmail() {
