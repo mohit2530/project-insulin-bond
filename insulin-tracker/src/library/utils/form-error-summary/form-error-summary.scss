@@ -1,0 +1,35 @@
+@import '~foundation-sites/scss/foundation';
+
+.form-error {
+  border: 3px dashed #ef0b0bb8;
+  @include flex-grid-row();
+  background-color: #c5de60;
+  border-radius: .3em;
+  margin-bottom: 2em;
+  margin-top: 2em;
+
+  @include breakpoint(medium){}
+
+  &__image {
+    @include flex-grid-column(1);
+    background: url("warning.svg") no-repeat center;
+    width: rem-calc(20);
+    height: auto;
+    border-radius: 0.3em 0 0 0.3em;
+    background-color: #f5b505;
+
+    @include breakpoint(medium) {
+      @include flex-grid-column(shrink);
+      width: rem-calc(70);
+      height: auto;
+      border-radius: 0.3em 0 0 0.3em;
+      background-color: #f5b505;
+    }
+  }
+
+  &__content {
+    @include flex-grid-column();
+    font-size: 0.9375rem;
+    color: #394048;
+  }
+}
