@@ -51,6 +51,9 @@ public class UsersControllerImpl implements UsersController {
             }
             throw apiExceptionService.throwApiException(errorMessages, HttpStatus.BAD_REQUEST);
         }
+        if (userRepo.findByEmail(user.getEmail()) != null) {
+            throw apiExceptionService.throwApiException("Email Already Exist", HttpStatus.BAD_REQUEST);
+        }
 
         user.setRole("user");
         saveUser(user.getFirstName(), user.getLastName(), user.getPassword(), user.getRole(),
