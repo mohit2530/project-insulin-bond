@@ -1,13 +1,19 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import {Link, NavLink} from 'react-router-dom';
+import {SignInNavigationAction, SignUpNavigationAction} from "../../navigation/navigation.action";
+import {connect} from "react-redux";
+import {path} from "../../navigation/path";
 
-const SignedOutLinks = () => {
+const SignedOutLinks = (props) => {
+    const navigateToSignIn = () => props.dispatch(SignInNavigationAction());
+    const navigateToSignUp = () => props.dispatch(SignUpNavigationAction());
     return (
         <ul className="right">
-            <li> <NavLink to="/"> Register </NavLink></li>
-            <li> <NavLink to="/"> Log In </NavLink></li>
+            <li onClick={navigateToSignUp}><a>Register</a></li>
+            <li onClick={navigateToSignIn}><a>Login</a></li>
         </ul>
     )
-}
+};
+const mapStateToProps = state => ({});
 
-export default SignedOutLinks;
+export default connect(mapStateToProps)(SignedOutLinks);

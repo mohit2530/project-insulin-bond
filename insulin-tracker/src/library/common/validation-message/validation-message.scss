@@ -1,0 +1,14 @@
+.validation-message {
+  &__container {
+    margin-top: 0;
+  }
+
+  &__error {
+    color: red;
+    margin-left: 1.2em;
+  }
+
+  &__svg {
+    background: url(exclamation.svg) no-repeat;
+  }
+}
