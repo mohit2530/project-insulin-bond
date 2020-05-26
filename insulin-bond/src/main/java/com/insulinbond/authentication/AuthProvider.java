@@ -16,12 +16,12 @@ public interface AuthProvider {
     Users getCurrentUser();
 
     /**
-     * Signs in a user using the given username and password
-     * @param username the given username
+     * Signs in a user using the given email and password
+     * @param email the given email
      * @param password the given password
      * @return true if user was successfully signed in
      */
-    boolean currentUserSignIn(String username, String password);
+    boolean currentUserSignIn(String email, String password);
 
     /**
      * Sign out the currently signed in user
@@ -34,7 +34,7 @@ public interface AuthProvider {
      * @param newPassword the new password for the current user
      * @return true, if successful
      */
-    boolean changeCurrentUserPassword(String existingPassword, String newPassword, String username);
+    boolean changeCurrentUserPassword(String existingPassword, String newPassword, String email);
 
     /**
      * Checks to see if the current user has one of the given roles

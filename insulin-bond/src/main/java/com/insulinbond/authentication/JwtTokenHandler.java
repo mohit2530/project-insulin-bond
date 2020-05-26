@@ -27,7 +27,7 @@ public class JwtTokenHandler {
     @Inject
     private UsersController usersController;
 
-    public String createToken(String username, String role) {
+    public String createToken(String email, String role) {
         Date now = new Date();
 
         // We will sign our JWT with our ApiKey secret
@@ -35,7 +35,7 @@ public class JwtTokenHandler {
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         // Let's set the JWT Claims
-        JwtBuilder builder = Jwts.builder().setIssuedAt(now).setSubject(username).claim("rol", role).signWith(signingKey,
+        JwtBuilder builder = Jwts.builder().setIssuedAt(now).setSubject(email).claim("rol", role).signWith(signingKey,
                 signatureAlgorithm);
 
         // if it has been specified, let's add the expiration
@@ -64,7 +64,7 @@ public class JwtTokenHandler {
         Claims claims = Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                 .parseClaimsJws(token).getBody();
-        Users authedUser = usersController.getUserByUserName(claims.getSubject());
+        Users authedUser = usersController.getUserByEmail(claims.getSubject());
         return authedUser;
     }
 }

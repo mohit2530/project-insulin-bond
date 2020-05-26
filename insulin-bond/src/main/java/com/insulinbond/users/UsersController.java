@@ -1,5 +1,6 @@
 package com.insulinbond.users;
 
+import com.insulinbond.customErrorHandler.ApiRequestException;
 import com.insulinbond.exception.UnauthorizedException;
 import com.insulinbond.exception.UserCreationException;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,7 @@ import javax.validation.Valid;
 
 @CrossOrigin()
 @RestController
-@RequestMapping("project/ib/")
+@RequestMapping("project/ib")
 public interface UsersController {
 
     /**
@@ -23,10 +24,10 @@ public interface UsersController {
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST,
             consumes = {MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+            produces = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public String registerCurrentUser(@Valid @RequestBody Users user, BindingResult result) throws UserCreationException;
+    public String registerCurrentUser(@Valid @RequestBody Users user, BindingResult result) throws ApiRequestException;
 
 
     /**
@@ -34,7 +35,7 @@ public interface UsersController {
      * User logout
      * @return
      */
-    @RequestMapping(value ="/logout", method = RequestMethod.POST)
+    @RequestMapping(value ="/logout", method = RequestMethod.GET)
     public String logOutCurrentUser();
 
     /**
@@ -48,13 +49,12 @@ public interface UsersController {
             produces = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public String loginCurrentUser(@RequestBody Users user) throws UnauthorizedException;
+    public String loginCurrentUser(@RequestBody Users user) throws ApiRequestException;
 
     /**
-     * Todo: will remove Get user By Username
-     * @param username
+     * @param email
      * @return
      */
-    @RequestMapping(value = "/username/{username}", method = RequestMethod.POST)
-    public Users getUserByUserName(@PathVariable String username);
+    @RequestMapping(value = "/email/{email}", method = RequestMethod.GET)
+    public Users getUserByEmail(@PathVariable String email);
 }

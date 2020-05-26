@@ -25,12 +25,12 @@ public class UsersHelperService {
     /**
      * It will check if the given password is valid and matched with the store data
      *
-     * @param username
+     * @param email
      * @param password
      * @return
      */
-    public Users getValidUserWithPassword(String username, String password) {
-        Users user = userRepo.findByUsername(username);
+    public Users getValidUserWithPassword(String email, String password) {
+        Users user = userRepo.findByEmail(email);
         if (user != null) {
             String storeSalt = user.getSalt();
             String storePassword = user.getPassword();
@@ -47,10 +47,10 @@ public class UsersHelperService {
      *
      * @param user
      * @param newPassword
-     * @param username
+     * @param email
      */
-    public void changePassword(Users user, String newPassword, String username) {
-        user = userRepo.findByUsername(username);
+    public void changePassword(Users user, String newPassword, String email) {
+        user = userRepo.findByEmail(email);
         byte[] salt = passwordHasher.generateRandomSalt();
         String hashedPassword = passwordHasher.computeHash(newPassword, salt);
         String saltString = new String(Base64.encode(salt));
