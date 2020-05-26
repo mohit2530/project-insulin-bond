@@ -4,6 +4,8 @@ import com.insulinbond.authentication.*;
 import com.insulinbond.customErrorHandler.*;
 import com.insulinbond.exception.UnauthorizedException;
 import com.insulinbond.exception.UserCreationException;
+import com.insulinbond.users.model.UserLogin;
+import com.insulinbond.users.model.Users;
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -78,7 +80,7 @@ public class UsersControllerImpl implements UsersController {
      * @throws UnauthorizedException
      */
     @Override
-    public String loginCurrentUser(@RequestBody Users user) throws ApiRequestException {
+    public String loginCurrentUser(@RequestBody UserLogin user) throws ApiRequestException {
         if (authentication.currentUserSignIn(user.getEmail(), user.getPassword()) ) {
             Users currentUser = authentication.getCurrentUser();
             tokenHandler.createToken(user.getEmail(), currentUser.getRole());

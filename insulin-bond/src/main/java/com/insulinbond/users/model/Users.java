@@ -1,5 +1,6 @@
-package com.insulinbond.users;
+package com.insulinbond.users.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.tomcat.jni.Local;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,6 +18,7 @@ public class Users {
     /**
      * The user first name
      */
+    @ApiModelProperty(required = true)
     @NotNull
     @Valid
     private String firstName;
@@ -24,6 +26,7 @@ public class Users {
     /**
      * The user last name
      */
+    @ApiModelProperty(required = true)
     @NotNull
     @Valid
     private String lastName;
@@ -31,6 +34,7 @@ public class Users {
     /**
      * The user email
      */
+    @ApiModelProperty(required = true)
     @NotNull
     @Valid
     @Indexed(unique = true, sparse = true)
@@ -44,6 +48,7 @@ public class Users {
     /**
      * The user password.
      */
+    @ApiModelProperty(required = true)
     @NotNull
     @Valid
     private String password;
