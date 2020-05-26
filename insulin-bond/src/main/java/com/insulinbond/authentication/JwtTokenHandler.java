@@ -1,7 +1,7 @@
 package com.insulinbond.authentication;
 
 import com.insulinbond.users.UsersController;
-import com.insulinbond.users.Users;
+import com.insulinbond.users.model.Users;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;

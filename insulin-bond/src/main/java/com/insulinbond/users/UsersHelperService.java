@@ -1,6 +1,7 @@
 package com.insulinbond.users;
 
 import com.insulinbond.authentication.PasswordHasher;
+import com.insulinbond.users.model.Users;
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.stereotype.Service;
 

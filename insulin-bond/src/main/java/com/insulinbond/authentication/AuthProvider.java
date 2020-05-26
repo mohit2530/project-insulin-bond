@@ -1,6 +1,6 @@
 package com.insulinbond.authentication;
 
-import com.insulinbond.users.Users;
+import com.insulinbond.users.model.Users;
 
 public interface AuthProvider {
     /**

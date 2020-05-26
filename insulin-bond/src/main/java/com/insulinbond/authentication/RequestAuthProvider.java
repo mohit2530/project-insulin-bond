@@ -1,7 +1,7 @@
 package com.insulinbond.authentication;
 
 import com.insulinbond.users.UsersHelperService;
-import com.insulinbond.users.Users;
+import com.insulinbond.users.model.Users;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;

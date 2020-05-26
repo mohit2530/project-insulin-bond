@@ -1,6 +1,6 @@
 package com.insulinbond.authentication;
 
-import com.insulinbond.users.Users;
+import com.insulinbond.users.model.Users;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
