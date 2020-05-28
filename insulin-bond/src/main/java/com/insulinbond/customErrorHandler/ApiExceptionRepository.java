@@ -1,9 +1,9 @@
 package com.insulinbond.customErrorHandler;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * MongoDB Repository for Api Exception which get trigger when the service call this interface
+ * JPA Repository for Api Exception which get trigger when the service call this interface
  */
-public interface ApiExceptionRepository extends MongoRepository<ApiException, String> {
+public interface ApiExceptionRepository extends JpaRepository<ApiException, Long> {
 }

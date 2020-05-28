@@ -1,15 +1,21 @@
 package com.insulinbond.customErrorHandler;
 
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.http.HttpStatus;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * Api Exception class to show and save in database and this is also Mongodb Collection
+ * Api Exception class to show and save in database
  */
-@Document
+@Entity
+@Table(name = "exception")
 public class ApiException {
+
+    // ID required for database for unique
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE)
+    private Long id;
 
     // Error Message
     private final String message;
@@ -62,5 +68,9 @@ public class ApiException {
 
     public Throwable getThrowable() {
         return throwable;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

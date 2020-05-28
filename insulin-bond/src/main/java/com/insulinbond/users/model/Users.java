@@ -1,18 +1,19 @@
 package com.insulinbond.users.model;
 
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.tomcat.jni.Local;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
- * The user class with data base integration alongside mongo db database.
+ * The user class with data base integration alongside postgres database.
  */
-@Document(collection="users")
+@Entity
+@Table(name = "users")
 public class Users {
 
     /**
@@ -37,7 +38,7 @@ public class Users {
     @ApiModelProperty(required = true)
     @NotNull
     @Valid
-    @Indexed(unique = true, sparse = true)
+    @Id
     private String email;
 
     /**

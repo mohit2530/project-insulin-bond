@@ -1,8 +1,0 @@
-spring:
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: users
-server:
-  port: 8099 # this application will run on this port locally
