@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, String> {
      * @param email
      * @return User object
      */
-    public User findUserByEmailAddress(String email);
+    public User findByEmail(String email);
 
     /**
      * TODO : REMOVE THIS AFTER UNDERSTANDING

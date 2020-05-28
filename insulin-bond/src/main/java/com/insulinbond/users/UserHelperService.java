@@ -31,7 +31,7 @@ public class UserHelperService {
      * @return
      */
     public User getValidUserWithPassword(String email, String password) {
-        User user = userRepo.findUserByEmailAddress(email);
+        User user = userRepo.findByEmail(email);
         if (user != null) {
             String storeSalt = user.getSalt();
             String storePassword = user.getPassword();
@@ -51,7 +51,7 @@ public class UserHelperService {
      * @param email
      */
     public void changePassword(User user, String newPassword, String email) {
-        user = userRepo.findUserByEmailAddress(email);
+        user = userRepo.findByEmail(email);
         byte[] salt = passwordHasher.generateRandomSalt();
         String hashedPassword = passwordHasher.computeHash(newPassword, salt);
         String saltString = new String(Base64.encode(salt));

@@ -64,7 +64,7 @@ public class UserControllerImpl implements UserController {
             }
             throw apiExceptionService.throwApiException(errorMessages, HttpStatus.BAD_REQUEST);
         }
-        if (userRepo.findUserByEmailAddress(user.getEmail()) != null) {
+        if (userRepo.findByEmail(user.getEmail()) != null) {
             throw apiExceptionService.throwApiException("Email Already Exist", HttpStatus.BAD_REQUEST);
         }
         saveUserInDatabase(user.getFirstName(), user.getLastName(), user.getPassword(), "user",
@@ -118,7 +118,7 @@ public class UserControllerImpl implements UserController {
      */
     @Override
     public User retrieveUserByEmail(String email) {
-        return userRepo.findUserByEmailAddress(email);
+        return userRepo.findByEmail(email);
     }
 
     /**
