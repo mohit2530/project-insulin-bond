@@ -11,11 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+
 
 @Service
 public class UsersControllerImpl implements UsersController {
@@ -90,6 +92,11 @@ public class UsersControllerImpl implements UsersController {
         } else {
             throw apiExceptionService.throwApiException("Sorry Login could Not completed", HttpStatus.FORBIDDEN);
         }
+    }
+
+    @Override
+    public String findFirstName(@PathVariable String firstName) {
+        return userRepo.findByFirst(firstName);
     }
 
     /**

@@ -65,4 +65,9 @@ public interface UsersController {
     @ApiOperation(value = "Find User by Email")
     @RequestMapping(value = "/email/{email}", method = RequestMethod.GET)
     public Users getUserByEmail(@PathVariable String email);
+
+    // Example
+    @RequestMapping(value = "/firstname/{firstName}", method = RequestMethod.GET)
+    public String findFirstName(@PathVariable String firstName);
+
 }
