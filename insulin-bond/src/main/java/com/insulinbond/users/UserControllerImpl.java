@@ -1,11 +1,16 @@
 package com.insulinbond.users;
 
-import com.insulinbond.authentication.*;
-import com.insulinbond.customErrorHandler.*;
+import com.insulinbond.authentication.JwtTokenHandler;
+import com.insulinbond.authentication.PasswordHasher;
+import com.insulinbond.authentication.RequestAuthProvider;
+import com.insulinbond.customErrorHandler.ApiExceptionService;
+import com.insulinbond.customErrorHandler.ApiRequestException;
 import com.insulinbond.exception.UnauthorizedException;
 import com.insulinbond.exception.UserCreationException;
 import com.insulinbond.users.model.UserLogin;
-import com.insulinbond.users.model.Users;
+import com.insulinbond.users.model.User;
+import java.time.LocalDateTime;
+import javax.validation.Valid;
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,23 +19,26 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.inject.Inject;
-import javax.validation.Valid;
-import java.time.LocalDateTime;
-
+/**
+ * UserControllerImplementation Class
+ *
+ * Created by Anish on May 28, 2020
+ */
 
 @Service
-public class UsersControllerImpl implements UsersController {
+public class UserControllerImpl implements UserController {
 
     private RequestAuthProvider authentication;
     private JwtTokenHandler tokenHandler;
     private PasswordHasher passwordHasher;
-    private UsersRepository userRepo;
+    private UserRepository userRepo;
     private ApiExceptionService apiExceptionService;
 
-    @Inject
-    public UsersControllerImpl(RequestAuthProvider authentication, JwtTokenHandler tokenHandler,
-                               PasswordHasher passwordHasher, UsersRepository userRepo,
+    /**
+     * Constructor
+     */
+    public UserControllerImpl(RequestAuthProvider authentication, JwtTokenHandler tokenHandler,
+                               PasswordHasher passwordHasher, UserRepository userRepo,
                                ApiExceptionService apiExceptionService) {
         this.authentication = authentication;
         this.tokenHandler = tokenHandler;
@@ -41,13 +49,14 @@ public class UsersControllerImpl implements UsersController {
 
     /**
      * Register the user and save the data to Database
+     *
      * @param user
      * @param result
-     * @return
+     * @return the email address
      * @throws UserCreationException
      */
     @Override
-    public String registerCurrentUser(@Valid @RequestBody Users user, BindingResult result) throws ApiRequestException {
+    public String registerCurrentUser(@Valid @RequestBody User user, BindingResult result) throws ApiRequestException {
         if (result.hasErrors()) {
             String errorMessages = "";
             for (ObjectError error : result.getAllErrors()) {
@@ -55,24 +64,21 @@ public class UsersControllerImpl implements UsersController {
             }
             throw apiExceptionService.throwApiException(errorMessages, HttpStatus.BAD_REQUEST);
         }
-        if (userRepo.findByEmail(user.getEmail()) != null) {
+        if (userRepo.findUserByEmailAddress(user.getEmail()) != null) {
             throw apiExceptionService.throwApiException("Email Already Exist", HttpStatus.BAD_REQUEST);
         }
-
-        user.setRole("user");
-        saveUser(user.getFirstName(), user.getLastName(), user.getPassword(), user.getRole(),
+        saveUserInDatabase(user.getFirstName(), user.getLastName(), user.getPassword(), "user",
                 user.getEmail());
         return user.getEmail();
     }
 
     /**
      * Logout and end user session
-     * @return
+     *
      */
     @Override
-    public String logOutCurrentUser() {
+    public void logOutCurrentUser() {
         authentication.currentUserLogOff();
-        return "logout Success";
     }
 
     /**
@@ -84,55 +90,61 @@ public class UsersControllerImpl implements UsersController {
     @Override
     public String loginCurrentUser(@RequestBody UserLogin user) throws ApiRequestException {
         if (authentication.currentUserSignIn(user.getEmail(), user.getPassword()) ) {
-            Users currentUser = authentication.getCurrentUser();
+            User currentUser = authentication.getCurrentUser();
             tokenHandler.createToken(user.getEmail(), currentUser.getRole());
-
             return user.getEmail();
-
         } else {
-            throw apiExceptionService.throwApiException("Sorry Login could Not completed", HttpStatus.FORBIDDEN);
+            throw apiExceptionService.throwApiException("Login Failed.", HttpStatus.FORBIDDEN);
         }
     }
 
-    @Override
-    public String findFirstName(@PathVariable String firstName) {
-        return userRepo.findByFirst(firstName);
-    }
-
     /**
-     * Todo; Will remove => Get user by email
-     * @param email
+     * Retrieve the user by the first name
+     *
+     * @param firstName
      * @return
      */
     @Override
-    public Users getUserByEmail(String email) {
-        return userRepo.findByEmail(email);
+    public String retrieveUserByFirstName(@PathVariable String firstName) {
+        return userRepo.findUserByFirstName(firstName);
     }
 
     /**
-     * Save the user in Database
+     * TODO: REMOVE WHEN UNDERSTOOD
+     * Retrieve a user by the email
+     *
+     * @param email
+     * @return user object
+     */
+    @Override
+    public User retrieveUserByEmail(String email) {
+        return userRepo.findUserByEmailAddress(email);
+    }
+
+    /**
+     * Save the user in database
+     *
      * @param firstName
      * @param lastName
      * @param password
      * @param role
      * @param email
-     * @return save user
+     * @return user object
      */
-    private Users saveUser(String firstName, String lastName, String password, String role, String email){
+    private User saveUserInDatabase(String firstName, String lastName, String password, String role, String email){
         byte[] salt = passwordHasher.generateRandomSalt();
         String hashedPassword = passwordHasher.computeHash(password, salt);
         String saltString = new String(Base64.encode(salt));
         LocalDateTime accountCreatedDateTime = LocalDateTime.now();
 
-        Users user = new Users();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setPassword(hashedPassword);
-        user.setSalt(saltString);
-        user.setAccountCreatedDateTime(accountCreatedDateTime);
-        user.setRole(role);
-        user.setEmail(email);
-
+        User user = new User();
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setPassword(hashedPassword);
+            user.setSalt(saltString);
+            user.setAccountCreatedDateTime(accountCreatedDateTime);
+            user.setRole(role);
+            user.setEmail(email);
         return userRepo.save(user);
     }
 }

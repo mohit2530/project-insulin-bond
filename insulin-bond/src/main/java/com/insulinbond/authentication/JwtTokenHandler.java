@@ -1,7 +1,7 @@
 package com.insulinbond.authentication;
 
-import com.insulinbond.users.UsersController;
-import com.insulinbond.users.model.Users;
+import com.insulinbond.users.UserController;
+import com.insulinbond.users.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -25,7 +25,7 @@ public class JwtTokenHandler {
     private static final String BEARER_PREFIX = "Bearer ";
 
     @Inject
-    private UsersController usersController;
+    private UserController userController;
 
     public String createToken(String email, String role) {
         Date now = new Date();
@@ -54,7 +54,7 @@ public class JwtTokenHandler {
      * @return
      * @throws IOException
      */
-    public Users getUser(String jwtString) throws IOException {
+    public User getUser(String jwtString) throws IOException {
         if (jwtString == null || !jwtString.startsWith(BEARER_PREFIX)) {
             return null;
         }
@@ -64,7 +64,7 @@ public class JwtTokenHandler {
         Claims claims = Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                 .parseClaimsJws(token).getBody();
-        Users authedUser = usersController.getUserByEmail(claims.getSubject());
+        User authedUser = userController.retrieveUserByEmail(claims.getSubject());
         return authedUser;
     }
 }
