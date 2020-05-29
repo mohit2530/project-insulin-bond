@@ -1,6 +1,6 @@
 package com.insulinbond.authentication;
 
-import com.insulinbond.users.model.Users;
+import com.insulinbond.users.model.User;
 
 public interface AuthProvider {
     /**
@@ -13,7 +13,7 @@ public interface AuthProvider {
      * Returns the currently signed in user.
      * @return the currently signed in user
      */
-    Users getCurrentUser();
+    User getCurrentUser();
 
     /**
      * Signs in a user using the given email and password

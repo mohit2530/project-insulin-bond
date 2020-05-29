@@ -4,7 +4,7 @@ import com.insulinbond.customErrorHandler.ApiRequestException;
 import com.insulinbond.exception.UnauthorizedException;
 import com.insulinbond.exception.UserCreationException;
 import com.insulinbond.users.model.UserLogin;
-import com.insulinbond.users.model.Users;
+import com.insulinbond.users.model.User;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,11 +13,17 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * UserController Interface
+ *
+ * Created by Anish on May 28, 2020
+ */
+
 @CrossOrigin()
 @RestController
-@RequestMapping("project/ib")
-public interface UsersController {
-
+@RequestMapping("project/insulin/v1/tracker")
+@ApiOperation(value = "Api to retrieve user data")
+public interface UserController {
     /**
      * Register the user
      * @param user
@@ -25,24 +31,23 @@ public interface UsersController {
      * @return
      * @throws UserCreationException
      */
-    @ApiOperation(notes = "Make sure to pass all the required field as body to sign up",
-    value = "User Registration")
+    @ApiOperation(notes = "Register Current User",value = "User object")
     @RequestMapping(value = "/register", method = RequestMethod.POST,
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public String registerCurrentUser(@Valid @RequestBody Users user, BindingResult result) throws ApiRequestException;
+    public String registerCurrentUser(@Valid @RequestBody User user, BindingResult result) throws ApiRequestException;
 
 
     /**
      * Todo: need to properly implement this into using a POST request
-     * User logout
-     * @return
+     * Log out the current user
+     *
      */
-    @ApiOperation(value = "Logout")
+    @ApiOperation(value = "Logout the current user")
     @RequestMapping(value ="/logout", method = RequestMethod.GET)
-    public String logOutCurrentUser();
+    public void logOutCurrentUser();
 
     /**
      * Take the user information and login and establish the session
@@ -50,7 +55,7 @@ public interface UsersController {
      * @return
      * @throws UnauthorizedException
      */
-    @ApiOperation(notes = "Takes the Email and Password to login the user", value = "Login User")
+    @ApiOperation(notes = "Login the current user", value = "User object")
     @RequestMapping(value = "/login", method = RequestMethod.POST,
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
@@ -59,15 +64,23 @@ public interface UsersController {
     public String loginCurrentUser(@RequestBody UserLogin user) throws ApiRequestException;
 
     /**
+     * Retrieve user by Email address
+     *
      * @param email
-     * @return
+     * @return user object
      */
-    @ApiOperation(value = "Find User by Email")
-    @RequestMapping(value = "/email/{email}", method = RequestMethod.GET)
-    public Users getUserByEmail(@PathVariable String email);
+    @ApiOperation(value = "Retrieve user by email address", notes = "User object")
+    @RequestMapping(value = "/data/{email}", method = RequestMethod.GET)
+    public User retrieveUserByEmail(@PathVariable String email);
 
-    // Example
-    @RequestMapping(value = "/firstname/{firstName}", method = RequestMethod.GET)
-    public String findFirstName(@PathVariable String firstName);
+    /**
+     * Retrieve user by first name
+     *
+     * @param firstName
+     * @return String first name
+     */
+    @ApiOperation(value = "Retrieve user by first name", notes = "User object")
+    @RequestMapping(value = "/data/{firstName}", method = RequestMethod.GET)
+    public String retrieveUserByFirstName(@PathVariable String firstName);
 
 }

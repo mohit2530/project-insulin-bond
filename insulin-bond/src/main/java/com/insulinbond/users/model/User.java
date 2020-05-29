@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "users")
-public class Users {
+public class User {
 
     /**
      * The user first name
@@ -59,6 +59,9 @@ public class Users {
      */
     private String salt;
 
+    /**
+     * The account created date time
+     */
     private LocalDateTime accountCreatedDateTime;
 
     /**

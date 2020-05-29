@@ -1,7 +1,7 @@
 package com.insulinbond.authentication;
 
-import com.insulinbond.users.UsersHelperService;
-import com.insulinbond.users.model.Users;
+import com.insulinbond.users.UserHelperService;
+import com.insulinbond.users.model.User;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -11,11 +11,11 @@ import java.util.Arrays;
 @Service
 public class RequestAuthProvider implements AuthProvider {
     private HttpServletRequest request;
-    private UsersHelperService usersHelperService;
+    private UserHelperService usersHelperService;
     public final static String USER_KEY = "appCurrentUser";
 
     @Inject
-    public RequestAuthProvider(HttpServletRequest request, UsersHelperService usersHelperService) {
+    public RequestAuthProvider(HttpServletRequest request, UserHelperService usersHelperService) {
         this.request = request;
         this.usersHelperService = usersHelperService;
     }
@@ -36,8 +36,8 @@ public class RequestAuthProvider implements AuthProvider {
      * @return the currently signed in user
      */
     @Override
-    public Users getCurrentUser() {
-        return (Users) request.getAttribute(USER_KEY);
+    public User getCurrentUser() {
+        return (User) request.getAttribute(USER_KEY);
     }
 
     /**
@@ -49,7 +49,7 @@ public class RequestAuthProvider implements AuthProvider {
      */
     @Override
     public boolean currentUserSignIn(String email, String password) {
-        Users authenticatedUser = usersHelperService.getValidUserWithPassword(email, password);
+        User authenticatedUser = usersHelperService.getValidUserWithPassword(email, password);
         if (authenticatedUser != null) {
             request.setAttribute(USER_KEY, authenticatedUser);
             return true;
@@ -74,11 +74,11 @@ public class RequestAuthProvider implements AuthProvider {
 	 */
     @Override
     public boolean changeCurrentUserPassword(String existingPassword, String newPassword, String email) {
-        Users userFromSession = (Users) request.getAttribute(USER_KEY);
+        User userFromSession = (User) request.getAttribute(USER_KEY);
         if (userFromSession == null) {
             return false;
         }
-        Users userFromDb = usersHelperService.getValidUserWithPassword(userFromSession.getEmail(), existingPassword);
+        User userFromDb = usersHelperService.getValidUserWithPassword(userFromSession.getEmail(), existingPassword);
         if (userFromDb != null && userFromDb.getEmail().equals(userFromDb.getEmail())) {
             usersHelperService.changePassword(userFromSession, newPassword, email);
             return true;
@@ -93,7 +93,7 @@ public class RequestAuthProvider implements AuthProvider {
 	 */
     @Override
     public boolean isCurrentUserWithRole(String[] roles) {
-        Users currentUser = getCurrentUser();
+        User currentUser = getCurrentUser();
         if (currentUser != null && roles != null) {
             return Arrays.asList(roles).contains(currentUser.getRole());
         }

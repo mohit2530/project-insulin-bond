@@ -1,6 +1,6 @@
 package com.insulinbond.authentication;
 
-import com.insulinbond.users.model.Users;
+import com.insulinbond.users.model.User;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,7 +18,6 @@ import java.util.List;
 public class JwtAuthInterceptor implements HandlerInterceptor {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
-
     private List<String> excludedUrls;
 
     @Inject
@@ -33,12 +32,10 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws IOException, ServletException {
-
     	if(excludedUrls.contains(request.getRequestURI().replaceFirst(request.getContextPath(), "")) || request.getMethod().equals("OPTIONS")) {
             return true;
         }
-
-        Users authedUser = tokenHandler.getUser(request.getHeader(AUTHORIZATION_HEADER));
+        User authedUser = tokenHandler.getUser(request.getHeader(AUTHORIZATION_HEADER));
         if(authedUser == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or invalid Authorization header.");
             return false;
@@ -48,25 +45,18 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
         }
     }
 
-
-
     /**
-     * @param exludedUrls the exludedUrls to set
+     * @param excludedUrls
      */
     public void setExcludedUrls(List<String> excludedUrls) {
         this.excludedUrls = excludedUrls;
     }
-
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            ModelAndView modelAndView) throws Exception {
-
     }
-
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
             throws Exception {
-
     }
-
 }

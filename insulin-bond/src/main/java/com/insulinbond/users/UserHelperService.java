@@ -1,7 +1,7 @@
 package com.insulinbond.users;
 
 import com.insulinbond.authentication.PasswordHasher;
-import com.insulinbond.users.model.Users;
+import com.insulinbond.users.model.User;
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +11,13 @@ import javax.inject.Inject;
  * User Helper Service, this will help the mapping other user classes to main Controller Implementation
  */
 @Service
-public class UsersHelperService {
+public class UserHelperService {
 
     private PasswordHasher passwordHasher;
-    private UsersRepository userRepo;
+    private UserRepository userRepo;
 
     @Inject
-    public UsersHelperService(PasswordHasher passwordHasher, UsersRepository userRepo) {
+    public UserHelperService(PasswordHasher passwordHasher, UserRepository userRepo) {
         this.passwordHasher = passwordHasher;
         this.userRepo = userRepo;
     }
@@ -30,8 +30,8 @@ public class UsersHelperService {
      * @param password
      * @return
      */
-    public Users getValidUserWithPassword(String email, String password) {
-        Users user = userRepo.findByEmail(email);
+    public User getValidUserWithPassword(String email, String password) {
+        User user = userRepo.findByEmail(email);
         if (user != null) {
             String storeSalt = user.getSalt();
             String storePassword = user.getPassword();
@@ -50,7 +50,7 @@ public class UsersHelperService {
      * @param newPassword
      * @param email
      */
-    public void changePassword(Users user, String newPassword, String email) {
+    public void changePassword(User user, String newPassword, String email) {
         user = userRepo.findByEmail(email);
         byte[] salt = passwordHasher.generateRandomSalt();
         String hashedPassword = passwordHasher.computeHash(newPassword, salt);
