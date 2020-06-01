@@ -3,11 +3,13 @@ package com.insulinbond.users;
 import com.insulinbond.customErrorHandler.ApiRequestException;
 import com.insulinbond.exception.UnauthorizedException;
 import com.insulinbond.exception.UserCreationException;
+import com.insulinbond.shared.EndPointConnection;
 import com.insulinbond.users.model.UserLogin;
 import com.insulinbond.users.model.User;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +21,9 @@ import javax.validation.Valid;
  * Created by Anish on May 28, 2020
  */
 
-@CrossOrigin()
 @RestController
-@RequestMapping("project/insulin/v1/tracker")
 @ApiOperation(value = "Api to retrieve user data")
-public interface UserController {
+public interface UserController extends EndPointConnection {
     /**
      * Register the user
      * @param user
@@ -46,8 +46,8 @@ public interface UserController {
      *
      */
     @ApiOperation(value = "Logout the current user")
-    @RequestMapping(value ="/logout", method = RequestMethod.GET)
-    public void logOutCurrentUser();
+    @RequestMapping(value ="/{contextId}/logout", method = RequestMethod.GET)
+    public void logOutCurrentUser(@PathVariable String contextId);
 
     /**
      * Take the user information and login and establish the session
@@ -58,10 +58,10 @@ public interface UserController {
     @ApiOperation(notes = "Login the current user", value = "User object")
     @RequestMapping(value = "/login", method = RequestMethod.POST,
             consumes = {MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public String loginCurrentUser(@RequestBody UserLogin user) throws ApiRequestException;
+    public ResponseEntity<?> loginCurrentUser(@RequestBody UserLogin user) throws ApiRequestException;
 
     /**
      * Retrieve user by Email address
@@ -70,8 +70,8 @@ public interface UserController {
      * @return user object
      */
     @ApiOperation(value = "Retrieve user by email address", notes = "User object")
-    @RequestMapping(value = "/data/{email}", method = RequestMethod.GET)
-    public User retrieveUserByEmail(@PathVariable String email);
+    @RequestMapping(value = "{contextId}/email/{email}", method = RequestMethod.GET)
+    public User retrieveUserByEmail(@PathVariable String contextId, @PathVariable String email) throws ApiRequestException ;
 
     /**
      * Retrieve user by first name
@@ -80,7 +80,7 @@ public interface UserController {
      * @return String first name
      */
     @ApiOperation(value = "Retrieve user by first name", notes = "User object")
-    @RequestMapping(value = "/data/{firstName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/firstname/{firstName}", method = RequestMethod.GET)
     public String retrieveUserByFirstName(@PathVariable String firstName);
 
 }

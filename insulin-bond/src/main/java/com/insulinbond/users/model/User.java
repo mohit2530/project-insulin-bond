@@ -2,19 +2,24 @@ package com.insulinbond.users.model;
 
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * The user class with data base integration alongside postgres database.
  */
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 2364534L;
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE)
+    private Long id;
 
     /**
      * The user first name
@@ -37,9 +42,17 @@ public class User {
      */
     @ApiModelProperty(required = true)
     @NotNull
+    @Column(unique = true)
     @Valid
-    @Id
     private String email;
+
+    /**
+     * Unique Context ID
+     */
+    @ApiModelProperty(required = true)
+    @Column(unique = true)
+    @Valid
+    private UUID contextId;
 
     /**
      * The user role [ could be admin, user ]
@@ -123,6 +136,22 @@ public class User {
 
     public void setAccountCreatedDateTime(LocalDateTime accountCreatedDateTime) {
         this.accountCreatedDateTime = accountCreatedDateTime;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public UUID getContextId() {
+        return contextId;
+    }
+
+    public void setContextId(UUID context) {
+        this.contextId = context;
     }
 }
 

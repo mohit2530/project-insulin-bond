@@ -1,4 +1,4 @@
-package com.insulinbond.authentication;
+package com.insulinbond.authorization;
 
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.stereotype.Service;

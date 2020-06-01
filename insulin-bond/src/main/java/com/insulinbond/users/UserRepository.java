@@ -4,13 +4,15 @@ import com.insulinbond.users.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.UUID;
+
 /**
  * User Repository
  *
  * Created by Anish on May 28, 2020
  */
 
-public interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     /**
      *  retrieve a user from email
@@ -19,6 +21,13 @@ public interface UserRepository extends JpaRepository<User, String> {
      * @return User object
      */
     public User findByEmail(String email);
+
+    /**
+     * Find by contextID will be use in every call beside login and sign up
+     * @param contextId
+     * @return
+     */
+    public User findByContextId(UUID contextId);
 
     /**
      * TODO : REMOVE THIS AFTER UNDERSTANDING
