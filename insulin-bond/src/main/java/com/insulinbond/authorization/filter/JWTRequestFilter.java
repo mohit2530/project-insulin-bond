@@ -2,6 +2,7 @@ package com.insulinbond.authorization.filter;
 
 import com.insulinbond.authorization.MyUserDetailsService;
 import com.insulinbond.authorization.util.JwtUtil;
+import com.insulinbond.shared.Shared;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,30 +30,37 @@ public class JWTRequestFilter extends OncePerRequestFilter {
     @Inject
     private JwtUtil jwtUtil;
 
+    @Inject
+    Shared shared;
+
     /*
     * It helps to create the Request Header Authorization and also use for JWt filter to validate
     * */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-
         final String authorizationHeader = request.getHeader("Authorization");
+        final String context = request.getHeader("Context");
         String username = null;
         String jwt = null;
 
+        try {
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUsername(jwt);
         }
-
-        if(username !=null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(username);
-            if(jwtUtil.validateToken(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken=
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(username);
+                // Check if the Token is validate and also check if the context coming from header match with what is save in Database
+                if (jwtUtil.validateToken(jwt, userDetails) && shared.checkUserByContext(context) != null) {
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                }
             }
+        } catch (Exception e) {
+            e.getMessage();
         }
         filterChain.doFilter(request, response);
     }

@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,6 +21,8 @@ import javax.inject.Inject;
 * */
 @EnableWebSecurity
 public class SecurityConfigure extends WebSecurityConfigurerAdapter {
+
+    private final String webUrl = "/project/insulin/v1/tracker/";
 
     @Inject
     private MyUserDetailsService myUserDetailsService;
@@ -41,13 +44,25 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
         http.csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/project/insulin/v1/tracker/login", "/project/insulin/v1/tracker/register")
+                .antMatchers(webUrl + "login",
+                        webUrl + "register")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    }
+
+    // Configure for Swagger URL to access without any authentication
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
     }
 
     @Override
