@@ -78,6 +78,7 @@
 			<version>0.9.1</version>
 		</dependency>
 
+		<!--It can be use for Java version 8+-->
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>

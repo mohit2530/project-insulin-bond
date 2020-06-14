@@ -16,9 +16,10 @@ import java.util.UUID;
 @Table(name = "users")
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 2364534L;
+    private static final Long serialVersionUID = 2364534L;
     @Id
     @GeneratedValue(strategy= GenerationType.TABLE)
+    @ApiModelProperty(hidden = true) // this will hide the model property in swagger
     private Long id;
 
     /**
@@ -49,7 +50,7 @@ public class User implements Serializable {
     /**
      * Unique Context ID
      */
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(hidden = true)
     @Column(unique = true)
     @Valid
     private UUID contextId;
@@ -57,6 +58,7 @@ public class User implements Serializable {
     /**
      * The user role [ could be admin, user ]
      */
+    @ApiModelProperty(hidden = true)
     private String role;
 
     /**
@@ -70,11 +72,13 @@ public class User implements Serializable {
     /**
      * The user password salt
      */
+    @ApiModelProperty(hidden = true)
     private String salt;
 
     /**
      * The account created date time
      */
+    @ApiModelProperty(hidden = true)
     private LocalDateTime accountCreatedDateTime;
 
     /**

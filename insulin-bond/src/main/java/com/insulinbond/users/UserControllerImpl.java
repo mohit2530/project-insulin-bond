@@ -14,6 +14,7 @@ import com.insulinbond.users.model.User;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.bouncycastle.util.encoders.Base64;
@@ -92,8 +93,11 @@ public class UserControllerImpl extends Shared implements UserController {
      * Logout and end user session
      */
     @Override
-    public void logOutCurrentUser(String contextId) throws ApiRequestException {
-        super.checkUserByContext(contextId);
+    public void logOutCurrentUser(HttpServletRequest request) throws ApiRequestException {
+        final String contextId = request.getHeader("Context");
+        User user = super.checkUserByContext(contextId);
+        user.setContextId(null);
+        userRepo.save(user);
     }
 
     /**
@@ -141,8 +145,8 @@ public class UserControllerImpl extends Shared implements UserController {
      */
     @Override
     public User retrieveUserByEmail(String contextId, String email) throws ApiRequestException {
-        User user = userRepo.findByEmail(email);
-        if (!super.checkUserByContext(contextId) || user == null){
+        User user = super.checkUserByContext(contextId);
+        if (user == null){
             throw new ApiRequestException("Sorry can't find a user", HttpStatus.BAD_REQUEST);
         }
         return user;

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -34,7 +35,7 @@ public interface UserController extends EndPointConnection {
     @ApiOperation(notes = "Register Current User",value = "User object")
     @RequestMapping(value = "/register", method = RequestMethod.POST,
             consumes = {MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public String registerCurrentUser(@Valid @RequestBody User user, BindingResult result) throws ApiRequestException;
@@ -46,8 +47,8 @@ public interface UserController extends EndPointConnection {
      *
      */
     @ApiOperation(value = "Logout the current user")
-    @RequestMapping(value ="/{contextId}/logout", method = RequestMethod.GET)
-    public void logOutCurrentUser(@PathVariable String contextId);
+    @RequestMapping(value ="/logout", method = RequestMethod.GET)
+    public void logOutCurrentUser(HttpServletRequest request);
 
     /**
      * Take the user information and login and establish the session
