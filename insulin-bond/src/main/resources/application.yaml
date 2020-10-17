@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/insulintracker
+    username: postgres
+    password: postgres1
+  jpa:
+    generate-ddl: true
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+server:
+  port: 8099
+  servlet:
+    context-path: /project/insulin/v1/tracker

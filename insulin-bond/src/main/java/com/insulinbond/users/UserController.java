@@ -7,6 +7,7 @@ import com.insulinbond.shared.EndPointConnection;
 import com.insulinbond.users.model.UserLogin;
 import com.insulinbond.users.model.User;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ import javax.validation.Valid;
 
 @RestController
 @ApiOperation(value = "Api to retrieve user data")
-public interface UserController extends EndPointConnection {
+public interface UserController {
     /**
      * Register the user
      * @param user
@@ -82,6 +83,9 @@ public interface UserController extends EndPointConnection {
      */
     @ApiOperation(value = "Retrieve user by first name", notes = "User object")
     @RequestMapping(value = "/firstname/{firstName}", method = RequestMethod.GET)
-    public String retrieveUserByFirstName(@PathVariable String firstName);
+    public String retrieveUserByFirstName(@ApiParam(value = "anish") String firstName);
+
+    @RequestMapping(value = "/context", method = RequestMethod.GET)
+    public void context(HttpServletRequest request);
 
 }

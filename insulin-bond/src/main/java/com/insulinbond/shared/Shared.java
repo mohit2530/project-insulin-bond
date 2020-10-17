@@ -4,6 +4,7 @@ import com.insulinbond.authorization.util.JwtUtil;
 import com.insulinbond.customErrorHandler.ApiRequestException;
 import com.insulinbond.users.UserRepository;
 import com.insulinbond.users.model.User;
+import org.bouncycastle.util.encoders.Base64;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +46,7 @@ public class Shared {
      * @param request
      * @return
      */
-    public String findEmailByToken(HttpServletRequest request){
+    public String getEmailByToken(HttpServletRequest request){
         final String authorizationHeader = request.getHeader("Authorization");
         String jwt = null;
         String email = null;
@@ -55,5 +56,11 @@ public class Shared {
         }
 
         return email;
+    }
+
+    public String getContextIdFromHeader(HttpServletRequest request) {
+        final String context = request.getHeader("Log");
+        String contextId = new String(Base64.decode(context));
+        return contextId;
     }
 }
