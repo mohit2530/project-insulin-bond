@@ -3,7 +3,6 @@ package com.insulinbond.users;
 import com.insulinbond.authorization.MyUserDetailsService;
 import com.insulinbond.authorization.PasswordHasher;
 import com.insulinbond.authorization.util.JwtUtil;
-import com.insulinbond.customErrorHandler.ApiExceptionService;
 import com.insulinbond.customErrorHandler.ApiRequestException;
 import com.insulinbond.exception.UnauthorizedException;
 import com.insulinbond.exception.UserCreationException;
@@ -44,19 +43,17 @@ public class UserControllerImpl extends Shared implements UserController {
     private JwtUtil jwtUtil;
     private PasswordHasher passwordHasher;
     private UserRepository userRepo;
-    private ApiExceptionService apiExceptionService;
 //    private Shared shared;
 
     /**
      * Constructor
      */
     public UserControllerImpl(PasswordHasher passwordHasher, UserRepository userRepo,
-                              ApiExceptionService apiExceptionService, JwtUtil jwtUtil,
+                              JwtUtil jwtUtil,
                               MyUserDetailsService myUserDetailsService, UserHelperService userHelperService,
                               AuthenticationManager authenticationManager) {
         this.passwordHasher = passwordHasher;
         this.userRepo = userRepo;
-        this.apiExceptionService = apiExceptionService;
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.userHelperService = userHelperService;
@@ -79,10 +76,10 @@ public class UserControllerImpl extends Shared implements UserController {
             for (ObjectError error : result.getAllErrors()) {
                 errorMessages += error.getDefaultMessage() + "\n";
             }
-            throw apiExceptionService.throwApiException(errorMessages, HttpStatus.BAD_REQUEST);
+            throw new ApiRequestException(errorMessages, HttpStatus.BAD_REQUEST);
         }
         if (userRepo.findByEmail(user.getEmail()) != null) {
-            throw apiExceptionService.throwApiException("Email Already Exist", HttpStatus.BAD_REQUEST);
+            throw new ApiRequestException("Email Already Exist", HttpStatus.BAD_REQUEST);
         }
         saveUserInDatabase(user.getFirstName(), user.getLastName(), user.getPassword(), "user",
                 user.getEmail());
@@ -94,7 +91,7 @@ public class UserControllerImpl extends Shared implements UserController {
      */
     @Override
     public void logOutCurrentUser(HttpServletRequest request) throws ApiRequestException {
-        final String contextId = request.getHeader("Context");
+        final String contextId = super.getContextIdFromHeader(request);
         User user = super.checkUserByContext(contextId);
         user.setContextId(null);
         userRepo.save(user);
@@ -117,10 +114,15 @@ public class UserControllerImpl extends Shared implements UserController {
                 new UsernamePasswordAuthenticationToken(login.getEmail(), user.getPassword()));
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(login.getEmail());
 
-        User addContext = userRepo.findByEmail(login.getEmail());
-        UUID context = UUID.randomUUID();
-        addContext.setContextId(context);
-        userRepo.save(addContext);
+        User userCommon = userRepo.findByEmail(login.getEmail());
+        UUID context = null;
+        if (userCommon.getContextId() == null) {
+            context = UUID.randomUUID();
+            userCommon.setContextId(context);
+            userRepo.save(userCommon);
+        } else {
+            context = userCommon.getContextId();
+        }
         String jwt = "Bearer " + jwtUtil.generateToken(userDetails);
         return ResponseEntity.ok(new AuthenticationResponse(jwt, context));
     }
@@ -134,6 +136,14 @@ public class UserControllerImpl extends Shared implements UserController {
     @Override
     public String retrieveUserByFirstName(@PathVariable String firstName) {
         return userRepo.findUserByFirstName(firstName);
+    }
+
+    @Override
+    public void context(HttpServletRequest request) {
+        String contextId = super.getContextIdFromHeader(request);
+        User user = super.checkUserByContext(contextId);
+        user.setContextId(null);
+        userRepo.save(user);
     }
 
     /**

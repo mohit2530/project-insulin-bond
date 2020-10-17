@@ -40,7 +40,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         final String authorizationHeader = request.getHeader("Authorization");
-        final String context = request.getHeader("Context");
+//        final String contextId = shared.getContextIdFromHeader(request);
         String username = null;
         String jwt = null;
 
@@ -52,7 +52,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(username);
                 // Check if the Token is validate and also check if the context coming from header match with what is save in Database
-                if (jwtUtil.validateToken(jwt, userDetails) && shared.checkUserByContext(context) != null) {
+                if (jwtUtil.validateToken(jwt, userDetails) /*&& shared.checkUserByContext(contextId) != null*/) {
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

@@ -32,21 +32,28 @@ public class ApiException {
     // data and time error recorded
     private final LocalDateTime timestamp;
 
+    //Request URI
+    private String path;
+
     // constructor to show error message in UI browser Network
-    public ApiException(String message, HttpStatus httpStatus, int statusCode, LocalDateTime timestamp) {
+    public ApiException(String message, HttpStatus httpStatus, int statusCode, LocalDateTime timestamp, String path) {
         this.message = message;
         this.httpStatus = httpStatus;
         this.statusCode = statusCode;
         this.timestamp = timestamp;
+        this.path = path;
+
     }
 
     // constructor to save error message in Database
-    public ApiException(String message, Throwable throwable, HttpStatus httpStatus, int statusCode, LocalDateTime timestamp) {
+    public ApiException(String message, Throwable throwable,
+                        HttpStatus httpStatus, int statusCode, LocalDateTime timestamp, String path) {
         this.message = message;
         this.throwable = throwable;
         this.httpStatus = httpStatus;
         this.statusCode = statusCode;
         this.timestamp = timestamp;
+        this.path = path;
     }
 
     // Getters for above Value
@@ -66,11 +73,19 @@ public class ApiException {
         return statusCode;
     }
 
-    public Throwable getThrowable() {
+    /*public Throwable getThrowable() {
         return throwable;
-    }
+    }*/
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

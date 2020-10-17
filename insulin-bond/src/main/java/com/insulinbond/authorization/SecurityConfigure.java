@@ -22,8 +22,6 @@ import javax.inject.Inject;
 @EnableWebSecurity
 public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 
-    private final String webUrl = "/project/insulin/v1/tracker/";
-
     @Inject
     private MyUserDetailsService myUserDetailsService;
 
@@ -44,13 +42,13 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
         http.csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers(webUrl + "login",
-                        webUrl + "register")
+                .antMatchers("/login",
+                        "/register")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -62,7 +60,9 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 "/swagger-resources/**",
                 "/configuration/security",
                 "/swagger-ui.html",
-                "/webjars/**");
+                "/webjars/**",
+                "/actuator/**",
+                "/health");
     }
 
     @Override

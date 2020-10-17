@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("project/insulin/v1/tracker")
+//@RequestMapping("project/insulin/v1/tracker")
 public interface EndPointConnection {
 }
 
